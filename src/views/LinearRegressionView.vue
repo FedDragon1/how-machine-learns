@@ -184,8 +184,16 @@ function optimizeStep(remainingStep) {
   }
 
   const [dfdx, dydx] = gradient.value;
-  const slopeStep = dfdx * 10 * learningRate.value;
-  const interceptStep = dydx * learningRate.value;
+  let slopeStep = dfdx * learningRate.value * 10;
+  let interceptStep = dydx * learningRate.value * 10;
+
+  if (Math.abs(slopeStep) < 1e-4) {
+    slopeStep *= 100;
+  }
+
+  if (Math.abs(interceptStep) < 1e-4) {
+    interceptStep *= 100;
+  }
 
   modelSlope.value -= slopeStep;
   modelIntercept.value -= interceptStep;

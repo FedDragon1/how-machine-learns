@@ -13,17 +13,16 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {computed, ref, watch} from "vue";
 
 const props = defineProps(["label", "min", "max", "step", "initial"]);
 
 const model = defineModel();
-const modelValue = ref(props.initial)
+const modelValue = computed(() => props.initial);
 
 const onChange = (e) => {
   modelValue.value = Number.parseFloat(e.target.value);
 }
-
 
 // function percentageMapper(min, max) {
 //   const toPercentage = (value) => (value - min) / (max - min) * 100;

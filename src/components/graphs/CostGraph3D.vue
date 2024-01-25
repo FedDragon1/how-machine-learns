@@ -167,8 +167,8 @@ function getTangentLine() {
 
   point2 = [
     modelSlope.value,
-    modelIntercept.value + modelIntercept.value,
-    getCost(modelSlope.value, modelIntercept.value + modelIntercept.value)
+    modelIntercept.value + interceptPrecision.value,
+    getCost(modelSlope.value, modelIntercept.value + interceptPrecision.value)
   ];
   const dfdy = (point2[2] - point1[2]) / modelIntercept.value;
   const yIntercept = -point1[2] / dfdy + point1[1];
@@ -256,5 +256,9 @@ onMounted(drawGraph);
 </script>
 
 <style scoped>
-
+.cost-slope-graph {
+  border-radius: 10px;
+  overflow: hidden;
+  height: 100%;
+}
 </style>
