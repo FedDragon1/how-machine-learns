@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-<!--    <div class="dataset-graph">-->
       <LinearRegressionDataset
           :noise="noiseRange"
           :num="dataNum"
@@ -12,12 +11,20 @@
           :show-model="showModel"
           :model-slope="modelSlope"
           :show-cost-sources="showCostSources"
-          :show-tangent-line="showTangentLine"
           :model-intercept="0"
-          v-model:current-cost="currentCost"
-          v-model:derivative="derivative"
-          title="Find Best Slope"></LinearRegressionDataset>
-<!--    </div>-->
+          v-model:dataset="dataset"
+          title="Find Best Slope">
+        <CostGraph2D
+            :slope-range="slopeRange"
+            :slope="dataSlope"
+            :cost-function="costFunctionName"
+            :model-slope="modelSlope"
+            :modelShown="showModel"
+            :show-tangent-line="showTangentLine"
+            :dataset="dataset"
+            v-model:current-cost="currentCost"
+            v-model:derivative="derivative"/>
+      </LinearRegressionDataset>
 
     <Controls :wide-flat="showCostGraph" :show-training="showCostGraph">
       <template #graphs>
@@ -109,12 +116,16 @@ import {computed, ref, watch} from "vue";
 import CheckBox from "@/components/graphs/CheckBox.vue";
 import Selection from "@/components/graphs/Selection.vue";
 import Info from "@/components/graphs/Info.vue";
+import CostVsSlope2D from "@/components/graphs/CostGraph2D.vue";
+import {data} from "plotly.js/src/plots/frame_attributes";
+import CostGraph2D from "@/components/graphs/CostGraph2D.vue";
 
 const costFunctions = {
   "mae": "Mean Absolute Error",
   "mse": "Mean Squared Error"
 }
 
+const dataset = ref([]);
 const dataNum = ref(10);
 const slopeRange = ref(4);
 const noiseScale = ref(0.5);
@@ -149,8 +160,6 @@ function optimizeStep(remainingStep) {
   }
 
   const movement = derivative.value * learningRate.value;
-  console.log(derivative.value);
-
   modelSlope.value -= movement;
 
   requestIdleCallback(() => optimizeStep(remainingStep - 1), { timeout: 100 });

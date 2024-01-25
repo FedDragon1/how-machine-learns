@@ -4,24 +4,13 @@
   </main>
 
   <aside class="wrapper card" v-if="showCost">
-    <CostVsSlope2D
-        :slope-range="slopeRange"
-        :dataset="dataset"
-        :slope="slope"
-        :cost-function="costFunction"
-        :model-slope="modelSlope"
-        :modelShown="modelShown"
-        :show-tangent-line="showTangentLine"
-        v-model:current-cost="cost"
-        v-model:derivative="derivative"/>
+    <slot/>
   </aside>
 </template>
 
 <script setup>
-import {ref, onMounted, computed, watch, toRaw} from "vue";
+import {ref, onMounted, computed, watch} from "vue";
 import Plotly from 'plotly.js-dist';
-import Info from "@/components/graphs/Info.vue";
-import CostVsSlope2D from "@/components/graphs/CostVsSlope2D.vue";
 
 const props = defineProps({
   num: Number,
@@ -35,12 +24,8 @@ const props = defineProps({
   title: String,
   showCost: Boolean,
   showModel: Boolean,
-  showTangentLine: Boolean,
   showCostSources: Boolean
 })
-
-const cost = defineModel("currentCost");
-const derivative = defineModel("derivative");
 
 // canvas
 const graph = ref(null);
@@ -68,20 +53,7 @@ const baseLayout = {
       include: 0
     }
   },
-  showlegend: false,
-  // shapes: [
-  //   {
-  //     type: 'rect',
-  //     xref: 'x',
-  //     yref: 'y',
-  //     x0: 0,
-  //     y0: 0,
-  //     x1: 2,
-  //     y1: 2,
-  //     fillcolor: '#00ffff',
-  //     opacity: 0.2
-  //   }
-  // ]
+  showlegend: false
 }
 
 function randNorm() {
@@ -95,7 +67,7 @@ function randNorm() {
 }
 
 function generateDataset() {
-
+  // debugger
   const dataset = []
   for (let i = 0; i < num.value; i++) {
     const x = Math.random() * domainLimit.value;
@@ -108,7 +80,12 @@ function generateDataset() {
   return dataset;
 }
 
-const dataset = ref(generateDataset());
+const datasetModel = defineModel("dataset");
+const dataset = ref([]);
+watch(dataset, () => {
+  datasetModel.value = dataset.value;
+})
+
 const datasetXy = computed(() => {
   const x = [],
       y = [];
@@ -133,7 +110,7 @@ function generateData() {
 function generateModel() {
   return {
     x: [0, 1],
-    y: [0, modelSlope.value + modelIntercept.value],
+    y: [modelIntercept.value, modelSlope.value + modelIntercept.value],
     type: 'scatter',
     mode: 'lines'
   }
@@ -196,14 +173,9 @@ const drawGraph = (() => {
       if (costFunction.value === "mae") {
         insertAt(entries, 0, ...costSources)
       } else if (costFunction.value === "mse") {
-        console.log(layout);
         layout["shapes"] = costSources;
-        console.log(layout);
-
       }
     }
-
-    // console.log(entries);
 
     if (drawn) {
       Plotly.react(graph.value, entries, layout);
@@ -221,7 +193,7 @@ const drawGraph = (() => {
   return drawGraph;
 })()
 
-watch([num, noise, slope, intercept, modelIntercept, modelSlope, costFunction], () => {
+watch([num, noise, slope, intercept], () => {
   data.value = generateData();
   model.value = generateModel();
   if (showCostSources.value === true) {
@@ -229,6 +201,19 @@ watch([num, noise, slope, intercept, modelIntercept, modelSlope, costFunction], 
   }
   drawGraph();
 });
+watch([modelIntercept, modelSlope], () => {
+  model.value = generateModel();
+  if (showCostSources.value === true) {
+    costSources = generateCostSources();
+  }
+  drawGraph();
+})
+watch(costFunction, () => {
+  if (showCostSources.value === true) {
+    costSources = generateCostSources();
+  }
+  drawGraph();
+})
 watch(showCostSources, () => {
   if (showCostSources.value === true) {
     costSources = generateCostSources();
@@ -238,26 +223,16 @@ watch(showCostSources, () => {
 watch(modelShown, () => {
   drawGraph();
 })
-onMounted(drawGraph);
+onMounted(() => {
+  drawGraph();
+});
 </script>
 
 <style scoped>
 .wrapper {
   display: block;
   max-width: 40vw;
-}
-
-.dataset-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding-top: 10px;
-}
-
-label:not(.dataset-info:last-child) {
-  padding-right: 20px;
+  max-height: 50vh;
 }
 
 .dataset-graph {

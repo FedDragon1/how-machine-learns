@@ -44,7 +44,7 @@ function getCostWithSlope(slope) {
     const predY = slope * x;
     cost += costFunction.value(y, predY);
   }
-  return cost /dataset.value.length;
+  return cost / dataset.value.length;
 }
 
 function getCostDataset() {
@@ -103,7 +103,6 @@ function derivativeAt(x) {
 }
 
 function getTangentLine() {
-  // debugger;
   const point1 = [modelSlope.value, getCostWithSlope(modelSlope.value)];
   const point2 = [modelSlope.value + precision.value, getCostWithSlope(modelSlope.value + precision.value)];
   const slope = (point2[1] - point1[1]) / precision.value;
@@ -111,12 +110,22 @@ function getTangentLine() {
 
   const fn = (x) => slope * (x - point1[0]) + point1[1];
 
+  let x1 = xIntercept,
+      y1 = 0;
+  if (x1 > props.slopeRange) {
+    x1 = props.slopeRange;
+    y1 = fn(x1);
+  } else if (x1 < -props.slopeRange) {
+    x1 = -props.slopeRange;
+    y1 = fn(x1);
+  }
+
   const x2 = slope >= 0 ? props.slopeRange : -props.slopeRange;
   const y2 = fn(x2);
 
   return {
-    x: [xIntercept, x2],
-    y: [0, y2],
+    x: [x1, x2],
+    y: [y1, y2],
     type: 'scatter',
     mode: 'lines'
   }
@@ -167,7 +176,7 @@ const drawGraph = (() => {
   return drawGraph;
 })()
 
-watch([slope, dataset, precision, costFunction, modelSlope, tangentLineShown], () => {
+watch([dataset, precision, costFunction, modelSlope, tangentLineShown], () => {
   data.value = getGraphData();
   model.value = getModelData();
   if (tangentLineShown.value === true) {
