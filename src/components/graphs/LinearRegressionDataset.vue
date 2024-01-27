@@ -46,22 +46,11 @@ const baseLayout = {
   xaxis: {
     autorangeoptions: {
       include: 0
-    },
-    title: {
-      text: 'slope'
     }
   },
   yaxis: {
     autorangeoptions: {
       include: 0
-    },
-    title: {
-      text: 'intercept'
-    }
-  },
-  zaxis: {
-    title: {
-      text: 'cost'
     }
   },
   showlegend: false

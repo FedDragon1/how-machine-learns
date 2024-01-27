@@ -136,7 +136,11 @@ const layout = {
   xaxis: {
     autorangeoptions: {
       include: props.slopeRange
-    }
+    },
+    title: "slope"
+  },
+  yaxis: {
+    title: "cost"
   },
   showlegend: false
 }

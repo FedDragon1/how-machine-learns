@@ -48,9 +48,20 @@ const slopePrecision = computed(() => props.slopeRange / totalSamples.value * 2)
 const costDataset = ref([]);
 const layout = {
   title: "Cost vs. Slope",
-  xaxis: {
-    autorangeoptions: {
-      include: props.slopeRange
+  scene: {
+    xaxis: {
+      autorangeoptions: {
+        include: props.slopeRange
+      },
+      title: {
+        text: "slope"
+      }
+    },
+    yaxis: {
+      title: "intercept"
+    },
+    zaxis: {
+      title: "cost"
     }
   },
   showlegend: false
