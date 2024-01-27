@@ -1,4 +1,5 @@
 <template>
+  <BackButton/>
   <div class="wrapper">
     <LinearRegressionDataset
         :noise="noiseRange"
@@ -135,6 +136,7 @@ import Controls from "@/components/graphs/Controls.vue";
 import LinearRegressionDataset from "@/components/graphs/LinearRegressionDataset.vue";
 import {computed, ref, watch} from "vue";
 import CostGraph3D from "@/components/graphs/CostGraph3D.vue";
+import BackButton from "@/components/baseview/BackButton.vue";
 
 const costFunctions = {
   "mae": "Mean Absolute Error",

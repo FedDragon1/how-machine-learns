@@ -1,4 +1,5 @@
 <template>
+  <BackButton/>
   <div class="wrapper">
       <LinearRegressionDataset
           :noise="noiseRange"
@@ -119,6 +120,7 @@ import Info from "@/components/graphs/Info.vue";
 import CostVsSlope2D from "@/components/graphs/CostGraph2D.vue";
 import {data} from "plotly.js/src/plots/frame_attributes";
 import CostGraph2D from "@/components/graphs/CostGraph2D.vue";
+import BackButton from "@/components/baseview/BackButton.vue";
 
 const costFunctions = {
   "mae": "Mean Absolute Error",
