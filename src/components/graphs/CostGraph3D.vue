@@ -181,7 +181,7 @@ function getTangentLine() {
     modelIntercept.value + interceptPrecision.value,
     getCost(modelSlope.value, modelIntercept.value + interceptPrecision.value)
   ];
-  const dfdy = (point2[2] - point1[2]) / modelIntercept.value;
+  const dfdy = (point2[2] - point1[2]) / interceptPrecision.value;
   const yIntercept = -point1[2] / dfdy + point1[1];
   fn = (y) => dfdy * (y - point1[1]) + point1[2];
 
