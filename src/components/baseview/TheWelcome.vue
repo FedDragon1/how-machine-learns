@@ -10,17 +10,6 @@ import SupportIcon from '../icons/IconSupport.vue'
 <template>
   <WelcomeItem>
     <template #icon>
-      <DocumentationIcon />
-    </template>
-    <template #heading>What is Learning?</template>
-
-    This
-    <router-link to="/learn">page</router-link>
-    provides you with all information you need to get started.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
       <ToolingIcon />
     </template>
     <template #heading>Best Fit Slope</template>
@@ -43,23 +32,12 @@ import SupportIcon from '../icons/IconSupport.vue'
 
   <WelcomeItem>
     <template #icon>
-      <CommunityIcon />
-    </template>
-    <template #heading>Multilayer Perception</template>
-
-    Linear regression is still not complicated enough to conquer meaningful
-    problems... This <router-link to="/mlp">multilayer perceptron</router-link>
-    sandbox is perfect for constructing a complex model to be trained.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
       <SupportIcon />
     </template>
     <template #heading>Training Model</template>
 
     But how can we train the complex function into a meaningful model that captures
-    pattern? This <router-link to="/backprop">backpropagation & gradient descent</router-link>
+    pattern? This <a href="https://playground.tensorflow.org/">backpropagation & gradient descent</a>
     simulation dissects the process of training a model.
   </WelcomeItem>
 </template>
